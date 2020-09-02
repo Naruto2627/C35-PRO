@@ -10,12 +10,14 @@ function preload()
 function setup() {
   database=firebase.database();
 
-  createCanvas(500,500);
+  createCanvas(1000,400);
+
+  foodObj = new Food();
   
   foodStock = database.ref('Food');
   foodStock.on("value",readStock);
 
-  dog=createSprite(250,300,150,150);
+  dog=createSprite(800,200,150,150);
   dog.addImage(dogImg); 
   dog.scale=0.15;
   textSize(20);
@@ -34,6 +36,8 @@ function setup() {
 function draw() {  
 
   background(46,139,87);
+
+  foodObj.display();
  
   fedTime = database.ref('FeedTime');
   fedTime.on("value",function(data){
@@ -56,6 +60,7 @@ function draw() {
 
 function readStock(data){
   foodS=data.val();
+  foodObj.updateFoodStock(foodS);
 }
 
 function writeStock(x){
@@ -70,7 +75,7 @@ function writeStock(x){
 }
 
 function feedDog(){
-  dog.addImage(happyDog);
+  dog.addImage(happyDogImg);
 
   foodObj.updateFoodStock(foodObj.getFoodStock()-1);
   database.ref('/').update({
